@@ -68,20 +68,19 @@ class ListController {
     }
 
     //[DELETE] /api/list/delete
-    deleteOne(req, res) {
-        List.findOne({ _id: req.query._id })
-            .then((item) => {
-                Promise.all([
-                    List.deleteOne({ _id: req.query._id }),
-                    Tasks.deleteMany({ idList: req.query._id }),
-                    Boards.updateOne({ _id: item.idBoard }, { $pull: { ArrayList: req.query._id } }),
-                ])
-                    .then((e) => {
-                        res.json(e);
-                    })
-                    .catch(() => {});
-            })
-            .catch(() => {});
+    async deleteOne(req, res) {
+        //Find list
+        const listFind = await List.findOne({ _id: req.query._id });
+        //Delete list tasks of list
+        const listTaskDelete = await Tasks.deleteMany({ _id: listFind.listTask });
+        //Delete list
+        const deleteList = await List.deleteOne({ _id: listFind._id });
+        //Update Array list
+        const updateBoard = await Boards.updateOne(
+            { _id: listFind.idBoard },
+            { $pull: { ArrayList: listFind._id.toString() } },
+        );
+        res.json(updateBoard);
     }
 }
 
