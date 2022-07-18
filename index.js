@@ -1,6 +1,5 @@
 const express = require('express');
 const morgan = require('morgan');
-const handlebars = require('express-handlebars');
 const bodyParser = require('body-parser');
 
 //Cho phep client doc tai nguyen tu xa
