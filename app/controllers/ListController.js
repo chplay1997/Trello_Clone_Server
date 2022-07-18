@@ -34,7 +34,7 @@ class ListController {
                 //Clone array
                 let array = [...req.query._id];
 
-                //Sắp xếp theo mảng lưu ở List gửi lên, tại vì khi find() thì mảng tự sắp theo _id
+                //Sắp xếp theo mảng lưu ở List gửi lên, tại vì khi find() thì mảng tự sắp theo _id.
                 for (let i = 0; i < array.length; i++) {
                     for (let j = 0; j < item.length; j++) {
                         if (array[i] == item[j]._id.toString()) {
