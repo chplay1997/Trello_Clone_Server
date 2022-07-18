@@ -8,5 +8,6 @@ router.get('/getAll', BoardController.getAll);
 router.get('/getOne', BoardController.getOne);
 router.put('/updateOne', BoardController.updateOne);
 router.post('/createTemplate', BoardController.createTemplate);
+router.delete('/deleteOne', BoardController.deleteOne);
 
 module.exports = router;

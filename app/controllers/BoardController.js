@@ -1,11 +1,12 @@
 const Boards = require('../models/Board');
 const List = require('../models/List');
 const Tasks = require('../models/Task');
+const mongoose = require('mongoose');
 
 class BoardsController {
     //[GET] /api/boards/getAll
     getAll(req, res, next) {
-                 Boards.find({})
+        Boards.find({})
             .then((board) => {
                 res.json(board);
             })
@@ -31,6 +32,22 @@ class BoardsController {
     async updateOne(req, res) {
         const response = await Boards.updateOne({ _id: req.body._id }, req.body);
         res.status(201).json(response);
+    }
+
+    //[DELETE] /api/boards/deleteOne
+    async deleteOne(req, res) {
+        const board = await Boards.findOne({ _id: req.query._id });
+        //Find list and delete tasks
+        board.ArrayList.forEach(async (list) => {
+            const listDelete = await List.findOne({ _id: list });
+            const listTaskDelete = await Tasks.deleteMany({ _id: listDelete.listTask });
+        });
+        //delete list
+        const listTaskDelete = await List.deleteMany({ _id: board.ArrayList });
+
+        //delete board
+        const response = await Boards.deleteOne({ _id: board._id });
+        res.json(response);
     }
 
     //[POST] /api/boards/createTemplate
