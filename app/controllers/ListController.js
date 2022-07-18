@@ -67,6 +67,19 @@ class ListController {
         res.status(201).json(response);
     }
 
+    //[PUT] /api/list/sort
+    async sort(req, res) {
+        const list = await List.findOne({ _id: req.body._id });
+        let typeSort = req.body.type === 'asc' ? 1 : -1;
+        const listTask = await Tasks.find({ _id: list.listTask }).sort({ title: typeSort });
+        let newListTask = [];
+        listTask.forEach((task) => {
+            newListTask.push(task._id.toString());
+        });
+        const addlist = await List.updateOne({ _id: req.body._id }, { $set: { listTask: newListTask } });
+        res.json(addlist);
+    }
+
     //[DELETE] /api/list/delete
     async deleteOne(req, res) {
         //Find list
