@@ -4,27 +4,21 @@ const Tasks = require('../models/Task');
 
 class ListController {
     //[GET] /api/list/getData
-    getData(req, res, next) {
-        Boards.findOne({ _id: req.query.idBoard })
-            .then((board) => {
-                List.find({ _id: board.ArrayList })
-                    .then((item) => {
-                        //Clone array
-                        let array = [...board.ArrayList];
+    async getData(req, res, next) {
+        const board = await Boards.findOne({ _id: req.query.idBoard });
+        const list = await List.find({ _id: board.ArrayList });
+        //Clone array List of board
+        let array = [...board.ArrayList];
 
-                        //Sắp xếp theo mảng lưu ở board, tại vì khi find() thì mảng tự sắp theo _id
-                        for (let i = 0; i < array.length; i++) {
-                            for (let j = 0; j < item.length; j++) {
-                                if (array[i] == item[j]._id.toString()) {
-                                    array[i] = item[j];
-                                }
-                            }
-                        }
-                        res.json(array);
-                    })
-                    .catch(next);
-            })
-            .catch(next);
+        //Sắp xếp theo mảng lưu ở board, tại vì khi find() thì mảng tự sắp theo _id
+        for (let i = 0; i < array.length; i++) {
+            for (let j = 0; j < item.length; j++) {
+                if (array[i] == item[j]._id.toString()) {
+                    array[i] = item[j];
+                }
+            }
+        }
+        res.json(array);
     }
 
     //[GET] /api/list/get
@@ -48,17 +42,11 @@ class ListController {
     }
 
     //[POST] /api/list/create
-    create(req, res, next) {
-        List.create(req.body)
-            .then((item) => {
-                Boards.updateOne({ _id: req.body.idBoard }, { $push: { ArrayList: item._id.toString() } })
-                    .then((e) => {
-                        res.status(201).json(e);
-                    })
-                    .catch(next);
-                res.status(201).json(item);
-            })
-            .catch(next);
+    async create(req, res, next) {
+        //Create list and add id list to array of board
+        const list = await List.create(req.body);
+        const board = await Boards.updateOne({ _id: req.body.idBoard }, { $push: { ArrayList: list._id.toString() } });
+        res.json(board);
     }
 
     //[PUT] /api/list/updateOne
