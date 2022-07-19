@@ -12,9 +12,9 @@ class ListController {
 
         //Sắp xếp theo mảng lưu ở board, tại vì khi find() thì mảng tự sắp theo _id
         for (let i = 0; i < array.length; i++) {
-            for (let j = 0; j < item.length; j++) {
-                if (array[i] == item[j]._id.toString()) {
-                    array[i] = item[j];
+            for (let j = 0; j < list.length; j++) {
+                if (array[i] == list[j]._id.toString()) {
+                    array[i] = list[j];
                 }
             }
         }
