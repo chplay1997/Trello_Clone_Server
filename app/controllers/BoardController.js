@@ -1,7 +1,6 @@
 const Boards = require('../models/Board');
 const List = require('../models/List');
 const Tasks = require('../models/Task');
-const mongoose = require('mongoose');
 
 class BoardsController {
     //[GET] /api/boards/getAll
